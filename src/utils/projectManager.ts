@@ -1,4 +1,4 @@
-import { Project, FormData, CalculationResult } from '../types';
+import { Project, FormData } from '../types';
 import { calculateResults } from './calculations';
 
 // Hilfsfunktion zur Generierung einer zufälligen ID

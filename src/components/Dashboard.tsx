@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormData, Project } from '../types';
+import { Project } from '../types';
 import { formatTime } from '../utils/calculations';
 import { Link } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';

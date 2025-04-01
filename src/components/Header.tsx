@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaBolt, FaUserCircle, FaSignOutAlt, FaSignInAlt, FaBars, FaTimes, FaRobot } from 'react-icons/fa';
+import { FaRobot } from 'react-icons/fa';
 
 interface HeaderProps {
   isLoggedIn: boolean;
