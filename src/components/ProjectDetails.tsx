@@ -1,7 +1,7 @@
 import React from 'react';
 import { Project } from '../types';
 import { formatTime } from '../utils/calculations';
-import { FaEdit, FaTrash, FaClock, FaUsers, FaCalendar } from 'react-icons/fa';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 interface ProjectDetailsProps {
   project: Project;
