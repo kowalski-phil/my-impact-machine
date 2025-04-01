@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import InputForm from './InputForm';
-import ResultsPanel from './ResultsPanel';
-import Badges from './Badges';
-import { FormData, CalculationResult, Project } from '../types';
-import { calculateResults, formatTime } from '../utils/calculations';
+import React from 'react';
+import { FormData, Project } from '../types';
+import { formatTime } from '../utils/calculations';
 import { Link } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
 import ProjectCard from './ProjectCard';
@@ -20,17 +17,6 @@ const Dashboard: React.FC<DashboardProps> = ({
   totalTimeSavings, 
   averageImpactScore 
 }) => {
-  const [formData, setFormData] = useState<FormData | null>(null);
-
-  const handleCalculation = (data: FormData) => {
-    const results = calculateResults(data);
-    setFormData(data);
-  };
-
-  const handleProjectClick = (projectId: string) => {
-    // Implementation of handleProjectClick
-  };
-
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
@@ -62,7 +48,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       </div>
 
       <div>
-        <h3 className="text-xl font-semibold mb-4">My Projects</h3>
+        <h3 className="text-xl font-semibold mb-4">{DASHBOARD_TEXTS.projectsSection}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map(project => (
             <ProjectCard 

@@ -7,18 +7,16 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     // Generiere eine einfache ID für den User
     const user: User = {
-      id: Math.random().toString(36).substr(2, 9),
-      name,
+      id: Math.random().toString(36).substring(2, 9),
+      name: email.split('@')[0], // Einfache Extraktion eines Namens aus der Email
       email
     };
     
@@ -36,7 +34,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             Access your automation impact dashboard
           </p>
         </div>
-        <form className="mt-8 space-y-6">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -46,6 +44,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 name="email"
                 type="email"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
@@ -57,6 +57,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 name="password"
                 type="password"
                 required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
@@ -69,7 +71,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                className="h-4 w-4 text-[#0074D9] focus:ring-[#0074D9] border-gray-300 rounded"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
                 Remember me
@@ -77,7 +79,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-primary hover:text-blue-700">
+              <a href="#" className="font-medium text-[#0074D9] hover:text-blue-700">
                 Forgot your password?
               </a>
             </div>
@@ -86,8 +88,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#0074D9] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0074D9]"
             >
+              <FaSignInAlt className="mr-2" />
               Sign in
             </button>
           </div>
