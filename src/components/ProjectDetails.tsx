@@ -1,7 +1,34 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Project } from '../types';
 import { formatTime } from '../utils/calculations';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaDownload } from 'react-icons/fa';
+import { Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartData,
+  ChartOptions,
+} from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import * as htmlToImage from 'html-to-image';
+
+// Registriere das Datalabels Plugin
+ChartJS.register(ChartDataLabels);
+
+// Registriere die anderen Chart.js Komponenten
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 interface ProjectDetailsProps {
   project: Project;
@@ -10,6 +37,86 @@ interface ProjectDetailsProps {
 }
 
 const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onEdit, onDelete }) => {
+  const chartRef = useRef<HTMLDivElement>(null);
+
+  const handleDownload = async () => {
+    if (chartRef.current) {
+      try {
+        const dataUrl = await htmlToImage.toPng(chartRef.current);
+        const link = document.createElement('a');
+        link.download = `${project.formData.workflowName}-visualization.png`;
+        link.href = dataUrl;
+        link.click();
+      } catch (error) {
+        console.error('Fehler beim Download:', error);
+      }
+    }
+  };
+
+  const chartData: ChartData<'bar'> = {
+    labels: ['Time Savings', 'Error Reduction'],
+    datasets: [
+      {
+        label: 'Before',
+        data: [
+          project.formData.timeBefore,
+          project.formData.errorRateBefore
+        ],
+        backgroundColor: '#dc3545',
+        borderColor: '#c82333',
+        borderWidth: 1,
+      },
+      {
+        label: 'After',
+        data: [
+          project.formData.timeAfter,
+          project.formData.errorRateAfter
+        ],
+        backgroundColor: '#28a745',
+        borderColor: '#218838',
+        borderWidth: 1,
+      }
+    ],
+  };
+
+  const chartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top' as const,
+      },
+      title: {
+        display: true,
+        text: 'Project Improvements',
+        font: {
+          size: 16,
+        },
+      },
+      datalabels: {
+        color: '#ffffff',
+        font: {
+          weight: 'bold',
+        },
+        formatter: (value: number, context: any) => {
+          if (context.chart.data.labels?.[context.dataIndex] === 'Time Savings') {
+            return `${value} min`;
+          }
+          return `${value}%`;
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Value',
+        },
+      },
+    },
+  };
+
   return (
     <div className="bg-white shadow-md rounded-xl p-6">
       <div className="flex justify-between items-start mb-6">
@@ -18,6 +125,13 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onEdit, onDele
           <p className="text-gray-600 mt-2">{project.formData.workflowDescription}</p>
         </div>
         <div className="flex space-x-2">
+          <button
+            onClick={handleDownload}
+            className="p-2 text-gray-600 hover:text-[#0074D9] transition"
+            aria-label="Download visualization"
+          >
+            <FaDownload className="w-5 h-5" />
+          </button>
           <button
             onClick={() => onEdit(project.id)}
             className="p-2 text-gray-600 hover:text-[#0074D9] transition"
@@ -33,6 +147,10 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onEdit, onDele
             <FaTrash className="w-5 h-5" />
           </button>
         </div>
+      </div>
+
+      <div ref={chartRef} className="mb-8">
+        <Bar data={chartData} options={chartOptions} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
